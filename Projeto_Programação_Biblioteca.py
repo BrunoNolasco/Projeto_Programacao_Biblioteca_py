@@ -1,6 +1,29 @@
 from docx import Document
 import os
 
+# -------------------- Classes --------------------
+
+class Livro:
+    def __init__(self, nome, autor, ano, disponivel=True):
+        self.nome = nome
+        self.autor = autor
+        self.ano = ano
+        self.disponivel = disponivel
+
+class Utilizador:
+    def __init__(self, nome, ID, contato):
+        self.nome = nome
+        self.ID = ID
+        self.contato = contato
+
+class Emprestimo:
+    def __init__(self, id_livro, id_utilizador, data_emprestimo, data_prevista_devolucao, data_devolucao="-"):
+        self.id_livro = id_livro
+        self.id_utilizador = id_utilizador
+        self.data_emprestimo = data_emprestimo
+        self.data_prevista_devolucao = data_prevista_devolucao
+        self.data_devolucao = data_devolucao
+
 # -------------------- Registros e listagens de dados --------------------
 
 def registar_livros(livros):
@@ -227,4 +250,32 @@ def carregar_emprestimos_docx(livros, utilizadores):
                 print(f"Erro ao processar parágrafo: {par.text} -> {e}")
     return emprestimos
 
-    
+# -------------------- Exclusão de dados --------------------
+
+def excluir_livro(livros):
+    listar_livros(livros)
+    id_l = int(input("ID do livro a excluir: "))
+    if 0 <= id_l < len(livros):
+        livros.pop(id_l)
+        print("Livro excluído com sucesso!")
+    else:
+        print("ID inválido.")
+        
+def excluir_utilizador(utilizadores):
+    listar_utilizadores(utilizadores)
+    id_u = int(input("ID do utilizador a excluir: "))
+    if 0 <= id_u < len(utilizadores):
+        utilizadores.pop(id_u)
+        print("Utilizador excluído com sucesso!")
+    else:
+        print("ID inválido.")
+        
+def excluir_emprestimo(emprestimos, livros, utilizadores):
+    listar_emprestimos(emprestimos, livros, utilizadores)
+    idx = int(input("Número do empréstimo a excluir (posição na lista): "))
+    if 0 <= idx < len(emprestimos):
+        emprestimos.pop(idx)
+        print("Empréstimo excluído com sucesso!")
+    else:
+        print("Índice inválido.")
+        
