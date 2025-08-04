@@ -54,7 +54,7 @@ def fazer_emprestimo(emprestimos, livros, utilizadores):
     previsão_devo = input("Data prevista de devolução (dd/mm/aaaa)")
     livros[id_l].disponivel = False
     emprestimos.append(Emprestimo(id_l, id_u, data, previsão_devo))
-
+        
 def fazer_devolucao(emprestimos, livros, utilizadores):
     id_l = int(input("ID do livro a devolver: "))
     for e in emprestimos:
@@ -278,4 +278,109 @@ def excluir_emprestimo(emprestimos, livros, utilizadores):
         print("Empréstimo excluído com sucesso!")
     else:
         print("Índice inválido.")
+
+# -------------------- Menu e Submenu --------------------
+
+def menu_interativo(livros, utilizadores, emprestimos):
+    def sair():
+        print("Programa encerrado. Obrigado!")
         
+    opcoes = {
+        "1": lambda: registar_livros(livros),
+        "2": lambda: registar_utilizadores(utilizadores),
+        "3": lambda: listar_livros(livros),
+        "4": lambda: listar_utilizadores(utilizadores),
+        "5": lambda: fazer_emprestimo(emprestimos, livros, utilizadores),
+        "6": lambda: fazer_devolucao(emprestimos, livros, utilizadores),
+        "7": lambda: listar_emprestimos(emprestimos, livros, utilizadores),
+        "8": lambda: submenu_atualizar_dados(livros, utilizadores, emprestimos),
+        "9": lambda: submenu_excluir_dados(livros, utilizadores, emprestimos),
+        "10": sair
+    }
+    
+    while True:
+        print("\n--- MENU ---")
+        print(" 1 - Registar Livros")
+        print(" 2 - Registar Utilizador")
+        print(" 3 - Consultar Livros")
+        print(" 4 - Consultar Utilizadores")
+        print(" 5 - Fazer Empréstimo")
+        print(" 6 - Devolver Livro")
+        print(" 7 - Ver Empréstimos")
+        print(" 8 - Atualizar Dados")
+        print(" 9 - Excluir Dados")
+        print("10 - Sair")
+        
+        escolha = input("Escolha uma opção: ").strip()
+        
+        if escolha in opcoes:
+            opcoes[escolha]()
+            if escolha == "10":
+                break
+        else:
+            print("Opção inválida. Tente novamente.")
+            
+def submenu_atualizar_dados(livros, utilizadores, emprestimos):
+    opcoes = {
+        "1": lambda: atualizar_dados_livro(livros),
+        "2": lambda: atualizar_dados_utilizador(utilizadores),
+        "3": lambda: atualizar_dados_emprestimo(emprestimos, livros, utilizadores),
+        "4": lambda: atualizar_dados_devolucao(emprestimos, livros),
+        "5": lambda: atualizar_disponibilidade_livros(livros, emprestimos)
+    }
+    
+    while True:
+        print("\n--- Atualizar Dados ---")
+        print("1 - Atualizar Livro")
+        print("2 - Atualizar Utilizador")
+        print("3 - Atualizar Empréstimo")
+        print("4 - Atualizar Devolução")
+        print("5 - Atualizar Disponibilidade dos Livros")
+        print("6 - Voltar ao menu principal")
+        
+        escolha = input("Escolha uma opção: ").strip()
+        if escolha in opcoes:
+            opcoes[escolha]()
+        elif escolha == "6":
+            break
+        else:
+            print("Opção inválida.")
+            
+def submenu_excluir_dados(livros, utilizadores, emprestimos):
+    opcoes = {
+        "1": lambda: excluir_livro(livros),
+        "2": lambda: excluir_utilizador(utilizadores),
+        "3": lambda: excluir_emprestimo(emprestimos, livros, utilizadores)
+    }
+    
+    while True:
+        print("\n--- Excluir Dados ---")
+        print("1 - Excluir Livro")
+        print("2 - Excluir Utilizador")
+        print("3 - Excluir Empréstimo")
+        print("4 - Voltar ao menu principal")
+        
+        escolha = input("Escolha uma opção: ").strip()
+        if escolha in opcoes:
+            opcoes[escolha]()
+        elif escolha == "4":
+            break
+        else:
+            print("Opção inválida.")
+
+# -------------------- Main --------------------
+
+def main():
+    livros = carregar_livros_docx()
+    utilizadores = carregar_utilizadores_docx()
+    emprestimos = carregar_emprestimos_docx(livros, utilizadores)
+    
+    menu_interativo(livros, utilizadores, emprestimos)
+    
+    atualizar_disponibilidade_livros(livros, emprestimos)
+    guardar_livros_docx(livros)
+    guardar_utilizadores_docx(utilizadores)
+    guardar_emprestimos_docx(emprestimos, livros, utilizadores)
+
+if __name__ == "__main__":
+    main()
